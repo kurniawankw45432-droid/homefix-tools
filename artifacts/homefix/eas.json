@@ -2,13 +2,13 @@
   "build": {
     "preview": {
       "distribution": "internal",
-      "node": "20.16.0",
+      "node": "22.9.0",
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
-      "node": "20.16.0"
+      "node": "22.9.0"
     }
   }
 }
