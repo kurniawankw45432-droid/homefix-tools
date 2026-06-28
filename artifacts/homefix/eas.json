@@ -3,12 +3,14 @@
     "preview": {
       "distribution": "internal",
       "node": "22.9.0",
+      "image": "latest",
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
-      "node": "22.9.0"
+      "node": "22.9.0",
+      "image": "latest"
     }
   }
 }
