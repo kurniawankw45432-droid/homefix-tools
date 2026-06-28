@@ -1,0 +1,14 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "5UPYAcaVVeBMBnEbET2mV"
+uri = "file://artifacts/homefix/assets/maskot_fix.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "VIm-SyvccAWJSWhNM-fFm"
+uri = "file://artifacts/homefix/assets/images/icon.png"
+type = "image"
+title = "generated_image"

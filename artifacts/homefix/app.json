@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "HomeFix",
+    "slug": "homefix",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "homefix",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "./assets/images/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0d47a1"
+    },
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {},
+    "web": {
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": [
+      "expo-localization"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c3059bdf-b68a-4d3d-8dd7-957498e042ba"
+      }
+    }
+  }
+}
