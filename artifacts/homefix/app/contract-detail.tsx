@@ -25,6 +25,7 @@ const ICON_PNG = {
   close: "https://img.icons8.com/color/96/multiply.png",
   warning: "https://img.icons8.com/color/96/error--v1.png",
   money2: "https://img.icons8.com/color/96/money-bag.png",
+  history: "https://img.icons8.com/color/96/transaction-list.png",
 };
 
 export default function ContractDetailScreen() {
@@ -261,7 +262,7 @@ export default function ContractDetailScreen() {
           },
         }),
       });
-      Alert.alert('✅ Laporan Terkirim', 'Owner akan memverifikasi kehadiranmu. DP akan cair setelah dikonfirmasi.');
+      Alert.alert('âœ… Laporan Terkirim', 'Owner akan memverifikasi kehadiranmu. DP akan cair setelah dikonfirmasi.');
       ambilDetail();
     } catch { Alert.alert('Error', 'Gagal lapor lokasi. Pastikan GPS aktif.'); }
     finally { setProc(false); }
@@ -270,8 +271,8 @@ export default function ContractDetailScreen() {
   const handleCairkanDP = async () => {
     const feeHF = hitungFeeHF(kontrak.Nilai_Borongan, true);
     const cairBersih = kontrak.Nilai_Dp_Rupiah - feeHF;
-    Alert.alert('💸 Cairkan DP',
-      `Rincian pencairan:\n\nDP Bruto : Rp ${kontrak.Nilai_Dp_Rupiah.toLocaleString('id-ID')}\nFee HF (2%): Rp ${feeHF.toLocaleString('id-ID')}\n────────────────────\nCair ke Tukang: Rp ${cairBersih.toLocaleString('id-ID')}\n\nLanjutkan?`,
+    Alert.alert('ðŸ’¸ Cairkan DP',
+      `Rincian pencairan:\n\nDP Bruto : Rp ${kontrak.Nilai_Dp_Rupiah.toLocaleString('id-ID')}\nFee HF (2%): Rp ${feeHF.toLocaleString('id-ID')}\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nCair ke Tukang: Rp ${cairBersih.toLocaleString('id-ID')}\n\nLanjutkan?`,
       [
         { text: 'Batal' },
         { text: 'Cairkan', onPress: async () => {
@@ -307,7 +308,7 @@ export default function ContractDetailScreen() {
                 },
               }),
             });
-            Alert.alert('✅ DP Dicairkan!', `Rp ${cairBersih.toLocaleString('id-ID')} masuk ke saldo tukang.\nFee HF Rp ${feeHF.toLocaleString('id-ID')} dipotong.`);
+            Alert.alert('âœ… DP Dicairkan!', `Rp ${cairBersih.toLocaleString('id-ID')} masuk ke saldo tukang.\nFee HF Rp ${feeHF.toLocaleString('id-ID')} dipotong.`);
             ambilDetail();
           } catch { Alert.alert('Gagal', 'Proses gagal. Coba lagi.'); }
           finally { setProc(false); }
@@ -336,7 +337,7 @@ export default function ContractDetailScreen() {
         Alert.alert('Gagal', result.error);
         return;
       }
-      Alert.alert('✅ Berhasil', `Rp ${nom.toLocaleString('id-ID')} berhasil dikunci ke saldo kontrak ini.`);
+      Alert.alert('âœ… Berhasil', `Rp ${nom.toLocaleString('id-ID')} berhasil dikunci ke saldo kontrak ini.`);
       setNominalTopup('');
       setShowTopupModal(false);
       ambilDetail();
@@ -358,8 +359,8 @@ export default function ContractDetailScreen() {
     const feeEstimasi = Math.round(kontrak.Saldo_Kontrak_Terkunci * 0.02);
     const cairEstimasi = kontrak.Saldo_Kontrak_Terkunci - feeEstimasi;
     Alert.alert(
-      '💸 Lunasi Pembayaran',
-      `Sisa saldo kontrak: Rp ${kontrak.Saldo_Kontrak_Terkunci.toLocaleString('id-ID')}\nFee HF (2%): Rp ${feeEstimasi.toLocaleString('id-ID')}\n────────────────────\nCair ke Tukang: Rp ${cairEstimasi.toLocaleString('id-ID')}\n\nKontrak akan ditandai Selesai. Lanjutkan?`,
+      'ðŸ’¸ Lunasi Pembayaran',
+      `Sisa saldo kontrak: Rp ${kontrak.Saldo_Kontrak_Terkunci.toLocaleString('id-ID')}\nFee HF (2%): Rp ${feeEstimasi.toLocaleString('id-ID')}\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nCair ke Tukang: Rp ${cairEstimasi.toLocaleString('id-ID')}\n\nKontrak akan ditandai Selesai. Lanjutkan?`,
       [
         { text: 'Batal' },
         { text: 'Lunasi', onPress: async () => {
@@ -378,7 +379,7 @@ export default function ContractDetailScreen() {
               Alert.alert('Gagal', result.error);
               return;
             }
-            Alert.alert('✅ Pelunasan Berhasil', `Rp ${Number(result.cair_bersih).toLocaleString('id-ID')} masuk ke saldo tukang.\nKontrak sudah selesai.`);
+            Alert.alert('âœ… Pelunasan Berhasil', `Rp ${Number(result.cair_bersih).toLocaleString('id-ID')} masuk ke saldo tukang.\nKontrak sudah selesai.`);
             ambilDetail();
           } catch {
             Alert.alert('Gagal', 'Koneksi error. Coba lagi.');
@@ -403,9 +404,9 @@ export default function ContractDetailScreen() {
           });
           const result = await res.json();
           if (result.selesai) {
-            Alert.alert('🎉 Kontrak Selesai!', 'Kedua pihak sudah konfirmasi. Silakan beri rating.');
+            Alert.alert('ðŸŽ‰ Kontrak Selesai!', 'Kedua pihak sudah konfirmasi. Silakan beri rating.');
           } else {
-            Alert.alert('✅ Tercatat', 'Menunggu konfirmasi dari pihak satunya. Owner/tukang lain sudah diberi notifikasi.');
+            Alert.alert('âœ… Tercatat', 'Menunggu konfirmasi dari pihak satunya. Owner/tukang lain sudah diberi notifikasi.');
           }
           ambilDetail();
         } catch { Alert.alert('Gagal', 'Koneksi error.'); }
@@ -433,7 +434,17 @@ export default function ContractDetailScreen() {
       id_mitra: kontrak.ID_Mitra, nama_pekerjaan: kontrak.Nama_Pekerjaan,
       nilai_borongan: String(kontrak.Nilai_Borongan),
     }} as any);
-  };if (loading) return <View style={s.center}><ActivityIndicator color="#0d47a1" size="large" /></View>;
+  };
+
+  // FIX-AUDIT: buka layar Riwayat Transaksi khusus kontrak ini
+  const bukaHalamanRiwayat = () => {
+    router.push({ pathname: '/riwayat-transaksi', params: {
+      kontrak_id: kontrak.Kontrak_ID,
+      nama_pekerjaan: kontrak.Nama_Pekerjaan,
+    }} as any);
+  };
+
+  if (loading) return <View style={s.center}><ActivityIndicator color="#0d47a1" size="large" /></View>;
 
     const isOwner = myUser?.Nama === kontrak?.ID_Owner;
     const isMitra = myUser?.Nama === kontrak?.ID_Mitra;
@@ -487,7 +498,10 @@ export default function ContractDetailScreen() {
               <Text style={s.judul}>SURAT PERJANJIAN KERJA (SPK)</Text>
               <View style={s.garisTebal} />
               <Text style={s.nomor}>Nomor: {kontrak?.Kontrak_ID}</Text>
-              <Text style={s.tglText}>Dibuat pada: {tglFormatted(kontrak?.Tgl_Kontrak || new Date().toISOString())}</Text>
+              {/* FIX-TANGGAL: pakai Tanggal_Buat_Kontrak (diisi sekali & permanen di backend
+                  saat kontrak dibuat). Tidak ada lagi fallback ke tanggal hari ini, supaya
+                  tanggal kontrak tidak berubah-ubah setiap dibuka di hari yang berbeda. */}
+              <Text style={s.tglText}>Dibuat pada: {tglFormatted(kontrak?.Tanggal_Buat_Kontrak)}</Text>
               <View style={s.garis} />
               <Text style={s.paragraf}>Pada hari ini telah disepakati perjanjian kerja antara pihak-pihak di bawah ini:</Text>
 
@@ -516,9 +530,9 @@ export default function ContractDetailScreen() {
                 <Text style={s.iNo}>3.</Text>
                 <Text style={s.iKey}>CARA BAYAR</Text>
                 <View style={{ flex: 1 }}>
-                  <Text style={s.terminItem}>: DP {kontrak?.Persen_DP}% (tgl mulai) → Rp {termin.dp.toLocaleString('id-ID')}</Text>
-                  <Text style={s.terminItem}> Termin I (progres 50%) → Rp {termin.t1.toLocaleString('id-ID')}</Text>
-                  <Text style={s.terminItem}> Pelunasan (selesai 100%) → Rp {termin.t2.toLocaleString('id-ID')}</Text>
+                  <Text style={s.terminItem}>: DP {kontrak?.Persen_DP}% (tgl mulai) â†’ Rp {termin.dp.toLocaleString('id-ID')}</Text>
+                  <Text style={s.terminItem}> Termin I (progres 50%) â†’ Rp {termin.t1.toLocaleString('id-ID')}</Text>
+                  <Text style={s.terminItem}> Pelunasan (selesai 100%) â†’ Rp {termin.t2.toLocaleString('id-ID')}</Text>
                 </View>
               </View>
               <View style={s.item}><Text style={s.iNo}>4.</Text><Text style={s.iKey}>JANGKA WAKTU</Text><Text style={s.iVal}>: {kontrak?.Estimasi_Hari} hari{'\n'} Mulai: {kontrak?.TglMulai} s/d {tglSelesai()}</Text></View>
@@ -548,7 +562,7 @@ export default function ContractDetailScreen() {
                   <Text style={s.ttdNama}>{kontrak?.ID_Mitra}</Text>
                 </View>
               </View>
-              <Text style={s.powered}>Difasilitasi HomeFix • {today}</Text>
+              <Text style={s.powered}>Difasilitasi HomeFix â€¢ {today}</Text>
             </View>
           </ViewShot>
 
@@ -559,6 +573,14 @@ export default function ContractDetailScreen() {
                  <Text style={s.btnDownloadText}>DOWNLOAD / BAGIKAN SPK</Text></>
             }
           </TouchableOpacity>
+
+          {/* FIX-AUDIT: tombol Riwayat Transaksi, selalu tersedia kalau kontrak sudah punya ID */}
+          {kontrak?.Kontrak_ID ? (
+            <TouchableOpacity style={s.btnRiwayat} onPress={bukaHalamanRiwayat}>
+              <Image source={{ uri: ICON_PNG.history }} style={{ width: 18, height: 18, marginRight: 8 }} />
+              <Text style={s.btnRiwayatText}>LIHAT RIWAYAT TRANSAKSI</Text>
+            </TouchableOpacity>
+          ) : null}
 
           {kontrak?.Status_Kontrak === 'Pengerjaan' &&!modeMandiri && (
             <View style={s.saldoKontrakBox}>
@@ -608,14 +630,14 @@ export default function ContractDetailScreen() {
 
           {kontrak?.Status_Kontrak === 'Menunggu DP' && isOwner && (
             <TouchableOpacity style={s.btnMain} onPress={handleBayarDP} disabled={proc}>
-              {proc? <ActivityIndicator color="#0d47a1" /> : <Text style={s.btnText}>✅ SETUJUI & BAYAR DP</Text>}
+              {proc? <ActivityIndicator color="#0d47a1" /> : <Text style={s.btnText}>âœ… SETUJUI & BAYAR DP</Text>}
             </TouchableOpacity>
           )}
 
           {kontrak?.Status_Kontrak === 'Berjalan' && isMitra && (
             <TouchableOpacity style={[s.btnMain, { backgroundColor: '#4caf50' }]} onPress={handleLaporTiba} disabled={proc}>
               {proc? <ActivityIndicator color="#fff" /> : <>
-                <Text style={[s.btnText, { color: '#fff' }]}>📍 SAYA SUDAH DI LOKASI</Text>
+                <Text style={[s.btnText, { color: '#fff' }]}>ðŸ“ SAYA SUDAH DI LOKASI</Text>
                 <Text style={{ color: '#e8f5e9', fontSize: 10, marginTop: 4 }}>Wajib foto + GPS otomatis</Text>
               </>}
             </TouchableOpacity>
@@ -648,7 +670,7 @@ export default function ContractDetailScreen() {
               )}
 
               <TouchableOpacity style={[s.btnMain, { backgroundColor: '#ff9800' }]} onPress={handleCairkanDP} disabled={proc}>
-                {proc? <ActivityIndicator color="#fff" /> : <Text style={[s.btnText, { color: '#fff' }]}>💸 VERIFIKASI & CAIRKAN DP</Text>}
+                {proc? <ActivityIndicator color="#fff" /> : <Text style={[s.btnText, { color: '#fff' }]}>ðŸ’¸ VERIFIKASI & CAIRKAN DP</Text>}
               </TouchableOpacity>
             </View>
           )}
@@ -826,6 +848,8 @@ export default function ContractDetailScreen() {
             powered:         { fontSize: 9, color: '#bbb', textAlign: 'center', marginTop: 10 },
             btnDownload:     { flexDirection: 'row', backgroundColor: '#0d47a1', padding: 16, borderRadius: 20, alignItems: 'center', justifyContent: 'center', marginTop: 16, elevation: 4 },
             btnDownloadText: { color: '#fff', fontWeight: 'bold', fontSize: 13 },
+            btnRiwayat:      { flexDirection: 'row', backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#0d47a1', padding: 14, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginTop: 10 },
+            btnRiwayatText:  { color: '#0d47a1', fontWeight: 'bold', fontSize: 12 },
             btnMain:         { flexDirection: 'row', backgroundColor: '#FFC400', padding: 18, borderRadius: 20, alignItems: 'center', justifyContent: 'center', marginTop: 12, elevation: 4 },
             btnText:         { color: '#0d47a1', fontWeight: 'bold', fontSize: 14 },
             infoVerif:       { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff3e0', padding: 12, borderRadius: 12, marginTop: 12, borderLeftWidth: 4, borderLeftColor: '#ff9800' },
