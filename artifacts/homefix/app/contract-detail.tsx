@@ -160,8 +160,15 @@ export default function ContractDetailScreen() {
 
   const tglFormatted = (iso: string) => {
     if (!iso) return '-';
-    try { return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }); }
-    catch { return iso; }
+    try {
+      const d = new Date(iso);
+      // FIX-INVALID-DATE: sebelumnya kalau iso ada isinya tapi gagal
+      // di-parse, new Date() tidak melempar error (tidak masuk catch),
+      // sehingga tampil teks "Invalid Date" ke user. Sekarang dicek
+      // manual dengan isNaN, fallback ke '-' seperti field kosong.
+      if (isNaN(d.getTime())) return '-';
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch { return '-'; }
   };
 
   const tglSelesai = () => {
@@ -262,7 +269,7 @@ export default function ContractDetailScreen() {
           },
         }),
       });
-      Alert.alert('âœ… Laporan Terkirim', 'Owner akan memverifikasi kehadiranmu. DP akan cair setelah dikonfirmasi.');
+      Alert.alert('Laporan Terkirim', 'Owner akan memverifikasi kehadiranmu. DP akan cair setelah dikonfirmasi.');
       ambilDetail();
     } catch { Alert.alert('Error', 'Gagal lapor lokasi. Pastikan GPS aktif.'); }
     finally { setProc(false); }
@@ -271,8 +278,8 @@ export default function ContractDetailScreen() {
   const handleCairkanDP = async () => {
     const feeHF = hitungFeeHF(kontrak.Nilai_Borongan, true);
     const cairBersih = kontrak.Nilai_Dp_Rupiah - feeHF;
-    Alert.alert('ðŸ’¸ Cairkan DP',
-      `Rincian pencairan:\n\nDP Bruto : Rp ${kontrak.Nilai_Dp_Rupiah.toLocaleString('id-ID')}\nFee HF (2%): Rp ${feeHF.toLocaleString('id-ID')}\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nCair ke Tukang: Rp ${cairBersih.toLocaleString('id-ID')}\n\nLanjutkan?`,
+    Alert.alert('Cairkan DP',
+      `Rincian pencairan:\n\nDP Bruto : Rp ${kontrak.Nilai_Dp_Rupiah.toLocaleString('id-ID')}\nFee HF (2%): Rp ${feeHF.toLocaleString('id-ID')}\n------------------------\nCair ke Tukang: Rp ${cairBersih.toLocaleString('id-ID')}\n\nLanjutkan?`,
       [
         { text: 'Batal' },
         { text: 'Cairkan', onPress: async () => {
@@ -308,7 +315,7 @@ export default function ContractDetailScreen() {
                 },
               }),
             });
-            Alert.alert('âœ… DP Dicairkan!', `Rp ${cairBersih.toLocaleString('id-ID')} masuk ke saldo tukang.\nFee HF Rp ${feeHF.toLocaleString('id-ID')} dipotong.`);
+            Alert.alert('DP Dicairkan!', `Rp ${cairBersih.toLocaleString('id-ID')} masuk ke saldo tukang.\nFee HF Rp ${feeHF.toLocaleString('id-ID')} dipotong.`);
             ambilDetail();
           } catch { Alert.alert('Gagal', 'Proses gagal. Coba lagi.'); }
           finally { setProc(false); }
@@ -337,7 +344,7 @@ export default function ContractDetailScreen() {
         Alert.alert('Gagal', result.error);
         return;
       }
-      Alert.alert('âœ… Berhasil', `Rp ${nom.toLocaleString('id-ID')} berhasil dikunci ke saldo kontrak ini.`);
+      Alert.alert('Berhasil', `Rp ${nom.toLocaleString('id-ID')} berhasil dikunci ke saldo kontrak ini.`);
       setNominalTopup('');
       setShowTopupModal(false);
       ambilDetail();
@@ -359,8 +366,8 @@ export default function ContractDetailScreen() {
     const feeEstimasi = Math.round(kontrak.Saldo_Kontrak_Terkunci * 0.02);
     const cairEstimasi = kontrak.Saldo_Kontrak_Terkunci - feeEstimasi;
     Alert.alert(
-      'ðŸ’¸ Lunasi Pembayaran',
-      `Sisa saldo kontrak: Rp ${kontrak.Saldo_Kontrak_Terkunci.toLocaleString('id-ID')}\nFee HF (2%): Rp ${feeEstimasi.toLocaleString('id-ID')}\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nCair ke Tukang: Rp ${cairEstimasi.toLocaleString('id-ID')}\n\nKontrak akan ditandai Selesai. Lanjutkan?`,
+      'Lunasi Pembayaran',
+      `Sisa saldo kontrak: Rp ${kontrak.Saldo_Kontrak_Terkunci.toLocaleString('id-ID')}\nFee HF (2%): Rp ${feeEstimasi.toLocaleString('id-ID')}\n------------------------\nCair ke Tukang: Rp ${cairEstimasi.toLocaleString('id-ID')}\n\nKontrak akan ditandai Selesai. Lanjutkan?`,
       [
         { text: 'Batal' },
         { text: 'Lunasi', onPress: async () => {
@@ -379,7 +386,7 @@ export default function ContractDetailScreen() {
               Alert.alert('Gagal', result.error);
               return;
             }
-            Alert.alert('âœ… Pelunasan Berhasil', `Rp ${Number(result.cair_bersih).toLocaleString('id-ID')} masuk ke saldo tukang.\nKontrak sudah selesai.`);
+            Alert.alert('Pelunasan Berhasil', `Rp ${Number(result.cair_bersih).toLocaleString('id-ID')} masuk ke saldo tukang.\nKontrak sudah selesai.`);
             ambilDetail();
           } catch {
             Alert.alert('Gagal', 'Koneksi error. Coba lagi.');
@@ -404,9 +411,9 @@ export default function ContractDetailScreen() {
           });
           const result = await res.json();
           if (result.selesai) {
-            Alert.alert('ðŸŽ‰ Kontrak Selesai!', 'Kedua pihak sudah konfirmasi. Silakan beri rating.');
+            Alert.alert('Kontrak Selesai!', 'Kedua pihak sudah konfirmasi. Silakan beri rating.');
           } else {
-            Alert.alert('âœ… Tercatat', 'Menunggu konfirmasi dari pihak satunya. Owner/tukang lain sudah diberi notifikasi.');
+            Alert.alert('Tercatat', 'Menunggu konfirmasi dari pihak satunya. Owner/tukang lain sudah diberi notifikasi.');
           }
           ambilDetail();
         } catch { Alert.alert('Gagal', 'Koneksi error.'); }
@@ -449,7 +456,12 @@ export default function ContractDetailScreen() {
     const isOwner = myUser?.Nama === kontrak?.ID_Owner;
     const isMitra = myUser?.Nama === kontrak?.ID_Mitra;
     const termin = hitungTermin();
-    const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    // FIX-TANGGAL-FOOTER: sebelumnya variabel ini bernama "today" dan memakai
+    // new Date() (tanggal SAAT DOKUMEN DIBUKA), sehingga tanggal di footer SPK
+    // ikut berubah setiap kali dibuka di hari yang berbeda. Untuk dokumen legal,
+    // tanggal wajib tetap/permanen, jadi sekarang memakai Tanggal_Buat_Kontrak
+    // yang sama seperti bagian atas dokumen (Dibuat pada: ...).
+    const tanggalDokumen = tglFormatted(kontrak?.Tanggal_Buat_Kontrak);
     const sudahTandaiSaya = isOwner? kontrak?.Owner_Selesai === 'Ya' : kontrak?.Mitra_Selesai === 'Ya';
 
     const persenTerisi = kontrak?.Nilai_Borongan > 0
@@ -530,9 +542,9 @@ export default function ContractDetailScreen() {
                 <Text style={s.iNo}>3.</Text>
                 <Text style={s.iKey}>CARA BAYAR</Text>
                 <View style={{ flex: 1 }}>
-                  <Text style={s.terminItem}>: DP {kontrak?.Persen_DP}% (tgl mulai) â†’ Rp {termin.dp.toLocaleString('id-ID')}</Text>
-                  <Text style={s.terminItem}> Termin I (progres 50%) â†’ Rp {termin.t1.toLocaleString('id-ID')}</Text>
-                  <Text style={s.terminItem}> Pelunasan (selesai 100%) â†’ Rp {termin.t2.toLocaleString('id-ID')}</Text>
+                  <Text style={s.terminItem}>: DP {kontrak?.Persen_DP}% (tgl mulai) -&gt; Rp {termin.dp.toLocaleString('id-ID')}</Text>
+                  <Text style={s.terminItem}> Termin I (progres 50%) -&gt; Rp {termin.t1.toLocaleString('id-ID')}</Text>
+                  <Text style={s.terminItem}> Pelunasan (selesai 100%) -&gt; Rp {termin.t2.toLocaleString('id-ID')}</Text>
                 </View>
               </View>
               <View style={s.item}><Text style={s.iNo}>4.</Text><Text style={s.iKey}>JANGKA WAKTU</Text><Text style={s.iVal}>: {kontrak?.Estimasi_Hari} hari{'\n'} Mulai: {kontrak?.TglMulai} s/d {tglSelesai()}</Text></View>
@@ -562,7 +574,7 @@ export default function ContractDetailScreen() {
                   <Text style={s.ttdNama}>{kontrak?.ID_Mitra}</Text>
                 </View>
               </View>
-              <Text style={s.powered}>Difasilitasi HomeFix â€¢ {today}</Text>
+              <Text style={s.powered}>Difasilitasi HomeFix - {tanggalDokumen}</Text>
             </View>
           </ViewShot>
 
@@ -630,14 +642,21 @@ export default function ContractDetailScreen() {
 
           {kontrak?.Status_Kontrak === 'Menunggu DP' && isOwner && (
             <TouchableOpacity style={s.btnMain} onPress={handleBayarDP} disabled={proc}>
-              {proc? <ActivityIndicator color="#0d47a1" /> : <Text style={s.btnText}>âœ… SETUJUI & BAYAR DP</Text>}
+              {proc
+                ? <ActivityIndicator color="#0d47a1" />
+                : <><Image source={{ uri: ICON_PNG.check2 }} style={{ width: 20, height: 20, marginRight: 8 }} />
+                   <Text style={s.btnText}>SETUJUI & BAYAR DP</Text></>
+              }
             </TouchableOpacity>
           )}
 
           {kontrak?.Status_Kontrak === 'Berjalan' && isMitra && (
             <TouchableOpacity style={[s.btnMain, { backgroundColor: '#4caf50' }]} onPress={handleLaporTiba} disabled={proc}>
               {proc? <ActivityIndicator color="#fff" /> : <>
-                <Text style={[s.btnText, { color: '#fff' }]}>ðŸ“ SAYA SUDAH DI LOKASI</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image source={{ uri: ICON_PNG.gps }} style={{ width: 18, height: 18, marginRight: 8 }} />
+                  <Text style={[s.btnText, { color: '#fff' }]}>SAYA SUDAH DI LOKASI</Text>
+                </View>
                 <Text style={{ color: '#e8f5e9', fontSize: 10, marginTop: 4 }}>Wajib foto + GPS otomatis</Text>
               </>}
             </TouchableOpacity>
@@ -670,7 +689,11 @@ export default function ContractDetailScreen() {
               )}
 
               <TouchableOpacity style={[s.btnMain, { backgroundColor: '#ff9800' }]} onPress={handleCairkanDP} disabled={proc}>
-                {proc? <ActivityIndicator color="#fff" /> : <Text style={[s.btnText, { color: '#fff' }]}>ðŸ’¸ VERIFIKASI & CAIRKAN DP</Text>}
+                {proc
+                  ? <ActivityIndicator color="#fff" />
+                  : <><Image source={{ uri: ICON_PNG.money2 }} style={{ width: 20, height: 20, marginRight: 8 }} />
+                     <Text style={[s.btnText, { color: '#fff' }]}>VERIFIKASI & CAIRKAN DP</Text></>
+                }
               </TouchableOpacity>
             </View>
           )}
