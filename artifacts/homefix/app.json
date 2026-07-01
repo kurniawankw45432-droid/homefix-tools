@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "homefix",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/icon.png",
       "resizeMode": "contain",
@@ -24,6 +24,11 @@
     },
     "plugins": [
       "expo-localization"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c3059bdf-b68a-4d3d-8dd7-957498e042ba"
+      }
+    }
   }
 }
